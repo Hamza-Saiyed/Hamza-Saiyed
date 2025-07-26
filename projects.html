@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Task Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans&display=swap"
+        rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #3498db;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 28px;
+        }
+
+        h3 {
+            font-size: 22px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #3498db;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            color: #fff !important;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ecf0f1 !important;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #fff;
+        }
+
+        /* Project List Styles */
+        .project-list-section {
+            padding: 50px 0;
+        }
+
+        .project-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card-body {
+            padding: 20px;
+        }
+
+        .project-card-title {
+            color: #3498db;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .project-card-description {
+            color: #777;
+            font-size: 16px;
+        }
+
+        .project-icon {
+            font-size: 30px;
+            color: #f39c12;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .create-project-button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-project-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .scroll-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .scroll-fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1050;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            color: #3498db;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #bdc3c7;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #95a5a6;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            .project-icon {
+                font-size: 24px;
+            }
+
+            .project-card-title {
+                font-size: 18px;
+            }
+
+            .create-project-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .navbar-brand {
+                font-size: 20px;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 5px;
+            background-color: #f39c12;
+            z-index: 1001;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">TaskMaster</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">Index</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="tasklist.html">Tasklist</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="taskdetail.html">Taskdetail</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="profile.html">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="signup.html">Signup</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">Login</a>
+            </li></ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Project List Section -->
+    <section class="project-list-section">
+        <div class="container">
+            <h2 class="text-center mb-4 scroll-fade-in">My Projects</h2>
+            <div class="text-center mb-4 scroll-fade-in">
+                <button class="create-project-button" onclick="openModal()">Create New Project</button>
+            </div>
+
+            <!-- Project Cards -->
+            <div class="row">
+                <div class="col-md-6 scroll-fade-in">
+                    <div class="project-card">
+                        <div class="project-card-body">
+                            <i class="fas fa-folder project-icon"></i>
+                            <h3 class="project-card-title">Website Redesign</h3>
+                            <p class="project-card-description">Redesigning the company website for a better user
+                                experience.</p>
+                            <a href="#" class="btn btn-primary btn-sm">View Tasks</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 scroll-fade-in">
+                    <div class="project-card">
+                        <div class="project-card-body">
+                            <i class="fas fa-chart-line project-icon"></i>
+                            <h3 class="project-card-title">Marketing Campaign</h3>
+                            <p class="project-card-description">Launching a new marketing campaign to increase brand
+                                awareness.</p>
+                            <a href="#" class="btn btn-primary btn-sm">View Tasks</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 scroll-fade-in">
+                    <div class="project-card">
+                        <div class="project-card-body">
+                            <i class="fas fa-code project-icon"></i>
+                            <h3 class="project-card-title">Mobile App Development</h3>
+                            <p class="project-card-description">Developing a mobile app for iOS and Android platforms.
+                            </p>
+                            <a href="#" class="btn btn-primary btn-sm">View Tasks</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 scroll-fade-in">
+                    <div class="project-card">
+                        <div class="project-card-body">
+                            <i class="fas fa-book project-icon"></i>
+                            <h3 class="project-card-title">Content Creation</h3>
+                            <p class="project-card-description">Creating engaging content for our blog and social media
+                                channels.</p>
+                            <a href="#" class="btn btn-primary btn-sm">View Tasks</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create New Project Modal -->
+    <div id="newProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Project</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="projectName">Project Name:</label>
+                        <input type="text" class="form-control" id="projectName" placeholder="Enter project name">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description:</label>
+                        <textarea class="form-control" id="projectDescription" rows="3"
+                            placeholder="Enter project description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createProject()">Create</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 TaskMaster. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Scroll Fade-In Animation
+        const scrollFadeInElements = document.querySelectorAll('.scroll-fade-in');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active'); // Only remove the class if you want the animation to happen only once
+                }
+            });
+        });
+
+        scrollFadeInElements.forEach((element) => observer.observe(element));
+
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('newProjectModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('newProjectModal').style.display = 'none';
+        }
+
+        function createProject() {
+            // Placeholder for create project functionality - In real implementation send data to backend
+
+            const projectName = document.getElementById('projectName').value;
+            const projectDescription = document.getElementById('projectDescription').value;
+
+            alert(`Project Name: ${projectName}\nDescription: ${projectDescription}\n(Project Creation Logic Would Be Here)`);
+
+            closeModal(); // Close the modal after "creating" project
+        }
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            let scrollTop = document.documentElement.scrollTop;
+            let scrollHeight = document.documentElement.scrollHeight;
+            let clientHeight = document.documentElement.clientHeight;
+            let scrollWidth = (scrollTop / (scrollHeight - clientHeight)) * 100;
+            document.querySelector('.scroll-progress-bar').style.width = scrollWidth + '%';
+        });
+    </script>
+</body>
+
+</html>
